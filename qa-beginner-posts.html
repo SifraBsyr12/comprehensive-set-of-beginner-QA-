@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QA for Beginners — Learn Quality Assurance</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f0f12;
+    --paper: #f5f0e8;
+    --accent: #e63946;
+    --accent2: #2a7d5f;
+    --accent3: #f4a261;
+    --muted: #6b6b72;
+    --card-bg: #ffffff;
+    --border: #e0dbd0;
+    --tag-bg: #0f0f12;
+    --tag-text: #f5f0e8;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    line-height: 1.7;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* NOISE TEXTURE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 100;
+    opacity: 0.5;
+  }
+
+  /* HEADER */
+  header {
+    border-bottom: 2px solid var(--ink);
+    padding: 2rem 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    background: var(--paper);
+    z-index: 50;
+  }
+
+  .logo {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.85rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .logo span {
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  nav {
+    display: flex;
+    gap: 2rem;
+    font-size: 0.82rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  nav a {
+    color: var(--ink);
+    text-decoration: none;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+  }
+
+  nav a:hover { opacity: 1; }
+
+  /* HERO */
+  .hero {
+    padding: 6rem 4rem 4rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: end;
+    border-bottom: 2px solid var(--ink);
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .hero-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .hero-label::before {
+    content: '';
+    width: 2rem;
+    height: 2px;
+    background: var(--accent);
+  }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3rem, 6vw, 5.5rem);
+    font-weight: 900;
+    line-height: 1.0;
+    letter-spacing: -0.02em;
+  }
+
+  .hero h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .hero-right {
+    padding-bottom: 0.5rem;
+  }
+
+  .hero-desc {
+    font-size: 1.1rem;
+    color: var(--muted);
+    max-width: 420px;
+    margin-bottom: 2.5rem;
+    line-height: 1.8;
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 3rem;
+  }
+
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--ink);
+  }
+
+  .stat-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    margin-top: 0.25rem;
+  }
+
+  /* POSTS GRID */
+  .posts-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 4rem;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 3rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .post-count {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+
+  /* FEATURED POST */
+  .featured-post {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 0;
+    border: 2px solid var(--ink);
+    margin-bottom: 3rem;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    background: var(--card-bg);
+  }
+
+  .featured-post:hover {
+    transform: translate(-3px, -3px);
+    box-shadow: 6px 6px 0 var(--ink);
+  }
+
+  .featured-visual {
+    background: var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 340px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .featured-visual .big-icon {
+    font-size: 8rem;
+    opacity: 0.15;
+    position: absolute;
+  }
+
+  .featured-visual .visual-text {
+    font-family: 'Playfair Display', serif;
+    color: var(--paper);
+    font-size: 5rem;
+    font-weight: 900;
+    opacity: 0.9;
+    z-index: 1;
+    letter-spacing: -0.04em;
+  }
+
+  .accent-line {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--accent);
+  }
+
+  .featured-content {
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-left: 2px solid var(--ink);
+  }
+
+  .post-tag {
+    display: inline-block;
+    background: var(--tag-bg);
+    color: var(--tag-text);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.75rem;
+    margin-bottom: 1.5rem;
+    width: fit-content;
+  }
+
+  .post-tag.green { background: var(--accent2); }
+  .post-tag.orange { background: var(--accent3); color: var(--ink); }
+  .post-tag.red { background: var(--accent); }
+
+  .featured-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.25;
+    margin-bottom: 1rem;
+    letter-spacing: -0.01em;
+  }
+
+  .featured-excerpt {
+    color: var(--muted);
+    font-size: 0.95rem;
+    line-height: 1.8;
+    flex: 1;
+    margin-bottom: 2rem;
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  .read-more {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-bottom: 1px solid var(--ink);
+    padding-bottom: 2px;
+    transition: gap 0.2s;
+  }
+
+  .read-more:hover { gap: 1rem; }
+
+  /* POSTS GRID */
+  .posts-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    border: 2px solid var(--ink);
+  }
+
+  .post-card {
+    padding: 2.5rem;
+    border-right: 2px solid var(--ink);
+    border-bottom: 2px solid var(--ink);
+    background: var(--card-bg);
+    cursor: pointer;
+    transition: background 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .post-card:nth-child(3n) { border-right: none; }
+  .post-card:nth-last-child(-n+3) { border-bottom: none; }
+
+  .post-card:hover { background: var(--paper); }
+
+  .post-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s;
+  }
+
+  .post-card:hover::before { transform: scaleX(1); }
+
+  .card-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 4rem;
+    font-weight: 900;
+    color: var(--border);
+    line-height: 1;
+    margin-bottom: -0.5rem;
+    display: block;
+  }
+
+  .card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    line-height: 1.3;
+    margin: 1rem 0 0.75rem;
+    letter-spacing: -0.01em;
+  }
+
+  .card-excerpt {
+    font-size: 0.88rem;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 2rem;
+  }
+
+  .card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* FULL ARTICLE MODAL */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15,15,18,0.8);
+    z-index: 200;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 2rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+    overflow-y: auto;
+  }
+
+  .modal-overlay.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .modal {
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    max-width: 760px;
+    width: 100%;
+    margin: auto;
+    transform: translateY(30px);
+    transition: transform 0.3s;
+  }
+
+  .modal-overlay.open .modal {
+    transform: translateY(0);
+  }
+
+  .modal-header {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 3rem;
+    position: relative;
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    background: none;
+    border: 1px solid rgba(245,240,232,0.3);
+    color: var(--paper);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.4rem 0.9rem;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .modal-close:hover { background: rgba(245,240,232,0.1); }
+
+  .modal-tag {
+    background: var(--accent);
+    color: white;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.75rem;
+    display: inline-block;
+    margin-bottom: 1.5rem;
+  }
+
+  .modal-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem;
+    font-weight: 900;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+
+  .modal-body {
+    padding: 3rem;
+  }
+
+  .modal-body h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 2rem 0 0.75rem;
+    color: var(--ink);
+  }
+
+  .modal-body p {
+    color: #3a3a45;
+    font-size: 0.95rem;
+    line-height: 1.85;
+    margin-bottom: 1rem;
+  }
+
+  .code-block {
+    background: var(--ink);
+    color: #a8e6cf;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.82rem;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    line-height: 1.6;
+    border-left: 3px solid var(--accent);
+    overflow-x: auto;
+  }
+
+  .tip-box {
+    border: 1px solid var(--accent2);
+    background: rgba(42,125,95,0.06);
+    padding: 1.25rem 1.5rem;
+    margin: 1.5rem 0;
+    font-size: 0.88rem;
+    color: var(--accent2);
+    font-weight: 500;
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+  }
+
+  .tip-box::before {
+    content: '→';
+    font-family: 'DM Mono', monospace;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+  }
+
+  /* BOTTOM STRIP */
+  .bottom-strip {
+    border-top: 2px solid var(--ink);
+    padding: 2rem 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero, .featured-post, .posts-grid, .post-card {
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .post-card:nth-child(1) { animation-delay: 0.1s; }
+  .post-card:nth-child(2) { animation-delay: 0.15s; }
+  .post-card:nth-child(3) { animation-delay: 0.2s; }
+  .post-card:nth-child(4) { animation-delay: 0.25s; }
+  .post-card:nth-child(5) { animation-delay: 0.3s; }
+  .post-card:nth-child(6) { animation-delay: 0.35s; }
+
+  @media (max-width: 900px) {
+    header, .hero, .posts-container, .bottom-strip { padding: 1.5rem; }
+    .hero { grid-template-columns: 1fr; gap: 2rem; }
+    .featured-post { grid-template-columns: 1fr; }
+    .featured-visual { min-height: 200px; }
+    .posts-grid { grid-template-columns: 1fr; }
+    .post-card { border-right: none; }
+    nav { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">QA <span>Journal</span> — Beginner Series</div>
+  <nav>
+    <a href="#">Basics</a>
+    <a href="#">Testing</a>
+    <a href="#">Tools</a>
+    <a href="#">Bugs</a>
+  </nav>
+</header>
+
+<div class="hero">
+  <div>
+    <div class="hero-label">Beginner Friendly</div>
+    <h1>Quality<br>Assurance<br><em>Decoded.</em></h1>
+  </div>
+  <div class="hero-right">
+    <p class="hero-desc">Everything you need to start your QA journey — from understanding what testing really is, to writing your first bug report and running your first automated test.</p>
+    <div class="hero-stats">
+      <div>
+        <div class="stat-num">7</div>
+        <div class="stat-label">Core Posts</div>
+      </div>
+      <div>
+        <div class="stat-num">~25</div>
+        <div class="stat-label">Min Read Each</div>
+      </div>
+      <div>
+        <div class="stat-num">0</div>
+        <div class="stat-label">Prereqs Needed</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="posts-container">
+
+  <div class="section-header">
+    <span class="section-title">All Posts — Beginner Series</span>
+    <span class="post-count">7 articles</span>
+  </div>
+
+  <!-- FEATURED POST -->
+  <div class="featured-post" onclick="openModal('post1')">
+    <div class="featured-visual">
+      <span class="big-icon">🔍</span>
+      <span class="visual-text">QA?</span>
+      <div class="accent-line"></div>
+    </div>
+    <div class="featured-content">
+      <div>
+        <span class="post-tag red">Start Here</span>
+        <h2 class="featured-title">What is QA? A Complete Beginner's Introduction to Quality Assurance</h2>
+        <p class="featured-excerpt">Think QA is just "clicking buttons to find bugs"? Think again. Quality Assurance is the discipline that stands between your users and a broken product. This post breaks down what QA actually means, why it matters, and why developers who understand QA build better software.</p>
+      </div>
+      <div class="post-meta">
+        <span>10 min read · Foundations</span>
+        <a class="read-more" href="#">Read Article →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- POST GRID -->
+  <div class="posts-grid">
+
+    <div class="post-card" onclick="openModal('post2')">
+      <span class="card-number">02</span>
+      <span class="post-tag green">Types</span>
+      <h3 class="card-title">Manual vs. Automation Testing: Which One Should You Learn First?</h3>
+      <p class="card-excerpt">Two paths, very different skills. We break down the trade-offs between manual and automated testing so you can make the right call for your career.</p>
+      <div class="card-footer">
+        <span>8 min read</span>
+        <span>→</span>
+      </div>
+    </div>
+
+    <div class="post-card" onclick="openModal('post3')">
+      <span class="card-number">03</span>
+      <span class="post-tag orange">Bugs</span>
+      <h3 class="card-title">How to Write a Bug Report That Developers Will Actually Fix</h3>
+      <p class="card-excerpt">A bad bug report gets ignored. A great one gets fixed in hours. Learn the anatomy of a perfect bug report with real-world examples.</p>
+      <div class="card-footer">
+        <span>9 min read</span>
+        <span>→</span>
+      </div>
+    </div>
+
+    <div class="post-card" onclick="openModal('post4')">
+      <span class="card-number">04</span>
+      <span class="post-tag">Lifecycle</span>
+      <h3 class="card-title">The Bug Lifecycle: From Discovery to "Resolved" (What Happens In Between)</h3>
+      <p class="card-excerpt">A bug doesn't just get fixed — it goes on a journey. Understand every stage of a bug's life and your role in each one as a QA engineer.</p>
+      <div class="card-footer">
+        <span>7 min read</span>
+        <span>→</span>
+      </div>
+    </div>
+
+    <div class="post-card" onclick="openModal('post5')">
+      <span class="card-number">05</span>
+      <span class="post-tag green">Testing Types</span>
+      <h3 class="card-title">The 8 Types of Software Testing Every Beginner Must Know</h3>
+      <p class="card-excerpt">Unit, integration, regression, smoke, sanity... the jargon is overwhelming. Here's a plain-English guide to every testing type you'll encounter on the job.</p>
+      <div class="card-footer">
+        <span>12 min read</span>
+        <span>→</span>
+      </div>
+    </div>
+
+    <div class="post-card" onclick="openModal('post6')">
+      <span class="card-number">06</span>
+      <span class="post-tag red">Tools</span>
+      <h3 class="card-title">Best QA Tools for Beginners in 2025: What to Learn and Why</h3>
+      <p class="card-excerpt">Selenium? Cypress? Postman? JIRA? We cut through the noise and tell you exactly which tools to focus on when you're just starting out in QA.</p>
+      <div class="card-footer">
+        <span>10 min read</span>
+        <span>→</span>
+      </div>
+    </div>
+
+    <div class="post-card" onclick="openModal('post7')">
+      <span class="card-number">07</span>
+      <span class="post-tag orange">Career</span>
+      <h3 class="card-title">How to Land Your First QA Job: The Honest Roadmap</h3>
+      <p class="card-excerpt">No fluff, no fake bootcamp promises. Just a clear, realistic roadmap for going from zero to your first QA role — including what to put in your portfolio.</p>
+      <div class="card-footer">
+        <span>11 min read</span>
+        <span>→</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MODALS -->
+<div class="modal-overlay" id="modal-post1" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <button class="modal-close" onclick="closeModalById('modal-post1')">✕ Close</button>
+      <span class="modal-tag">Start Here · Foundations</span>
+      <h2 class="modal-title">What is QA? A Complete Beginner's Introduction to Quality Assurance</h2>
+    </div>
+    <div class="modal-body">
+      <p>Imagine spending six months building a product, only to have users discover it crashes every time they tap a button. That's what QA exists to prevent. Quality Assurance (QA) is the practice of systematically checking software to ensure it works as intended — before your users find out it doesn't.</p>
+
+      <h3>QA vs. QC vs. Testing — What's the Difference?</h3>
+      <p><strong>Quality Assurance (QA)</strong> is process-oriented. It focuses on <em>how</em> software is built — defining standards, reviewing workflows, and preventing defects before they happen.</p>
+      <p><strong>Quality Control (QC)</strong> is product-oriented. It involves inspecting the finished output against requirements — catching defects after they've been introduced.</p>
+      <p><strong>Testing</strong> is a subset of QC — it's the hands-on act of executing the software and verifying its behavior.</p>
+
+      <div class="tip-box">Think of QA as the plumbing code inspector (process), QC as the home inspector after the house is built (product check), and testing as turning on the taps to see if water flows.</div>
+
+      <h3>Why Does QA Matter?</h3>
+      <p>The cost of fixing a bug grows exponentially the later it's discovered. A bug found during design costs $1 to fix. The same bug found in production can cost $1,000+ — plus lost user trust, bad reviews, and emergency deploys at 2am.</p>
+      <p>QA is the discipline that catches problems early, communicates risks clearly, and gives teams the confidence to ship.</p>
+
+      <h3>What Does a QA Engineer Actually Do?</h3>
+      <p>Day-to-day, a QA engineer might be writing test cases, running regression suites, reviewing requirements for ambiguity, logging bug reports, collaborating with developers on edge cases, or setting up automated pipelines. It's part detective, part communicator, part developer.</p>
+
+      <div class="code-block">Day in the life of a QA Engineer:
+  09:00 — Review sprint tickets for new features
+  10:00 — Write test cases for upcoming functionality
+  11:30 — Execute regression suite on staging environment
+  13:30 — Log 3 bugs found during morning testing
+  14:00 — Review dev fix for bug #247 (verify/close)
+  15:00 — Attend daily standup with dev team
+  15:30 — Update test documentation
+  16:30 — Plan tomorrow's exploratory testing session</div>
+
+      <h3>Key Skills to Start Building</h3>
+      <p>As a beginner, focus on: understanding how web applications work (front-end, back-end, APIs), learning to write clear and detailed bug reports, getting comfortable with at least one bug tracking tool (like JIRA), and developing a systematic, curious mindset for finding edge cases.</p>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-post2" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <button class="modal-close" onclick="closeModalById('modal-post2')">✕ Close</button>
+      <span class="modal-tag">Types</span>
+      <h2 class="modal-title">Manual vs. Automation Testing: Which One Should You Learn First?</h2>
+    </div>
+    <div class="modal-body">
+      <p>When people hear "QA automation," they sometimes assume manual testing is dying. It isn't. Both have distinct roles, and understanding when to use each is one of the most important skills a QA engineer can develop.</p>
+
+      <h3>Manual Testing</h3>
+      <p>Manual testing is performed by a human tester who interacts with the software and compares its behavior to expectations. It's most powerful for exploratory testing, usability checks, and situations where the behavior is hard to define precisely in code.</p>
+      <p><strong>When to use it:</strong> New features, UX validation, ad-hoc/exploratory testing, situations requiring human judgment.</p>
+
+      <h3>Automation Testing</h3>
+      <p>Automated testing uses code (scripts) to execute tests on your behalf. It's ideal for repetitive, high-volume tests that need to run frequently — like regression suites that verify nothing broke after a new deployment.</p>
+
+      <div class="code-block">// Example: A simple Cypress automated test
+describe('Login flow', () => {
+  it('should log in with valid credentials', () => {
+    cy.visit('/login')
+    cy.get('#email').type('user@example.com')
+    cy.get('#password').type('SecurePass123')
+    cy.get('button[type=submit]').click()
+    cy.url().should('include', '/dashboard')
+  })
+})</div>
+
+      <h3>So Which Should You Learn First?</h3>
+      <p>Start with <strong>manual testing</strong>. It builds the foundational thinking — understanding what to test, why, and how to document it. Automation is just encoding that thinking into code. If you skip the thinking, your automated tests will be brittle and incomplete.</p>
+
+      <div class="tip-box">A good rule of thumb: If a test is run more than 3 times, automate it. If it requires human judgment, keep it manual.</div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-post3" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <button class="modal-close" onclick="closeModalById('modal-post3')">✕ Close</button>
+      <span class="modal-tag">Bugs</span>
+      <h2 class="modal-title">How to Write a Bug Report That Developers Will Actually Fix</h2>
+    </div>
+    <div class="modal-body">
+      <p>The hardest part of QA isn't finding bugs — it's communicating them effectively. A vague bug report creates friction, slows down development, and often gets deprioritized. A great bug report is a gift to the developer: it tells them exactly what's wrong, how to reproduce it, and why it matters.</p>
+
+      <h3>The Anatomy of a Perfect Bug Report</h3>
+      <p>Every bug report needs these six elements: <strong>Title, Environment, Steps to Reproduce, Expected Result, Actual Result, and Severity/Priority.</strong></p>
+
+      <div class="code-block">TITLE: "Add to Cart" button unresponsive on mobile Chrome 120 — iOS 17
+
+ENVIRONMENT:
+  - Device: iPhone 14 Pro
+  - OS: iOS 17.2
+  - Browser: Chrome 120
+  - App Version: 3.4.1
+
+STEPS TO REPRODUCE:
+  1. Navigate to any product page
+  2. Scroll to the product detail section
+  3. Tap "Add to Cart" button
+
+EXPECTED: Item is added to cart; cart icon updates with count
+ACTUAL: Button appears to register the tap (brief highlight)
+        but cart count does not change; no feedback given
+
+SEVERITY: High — core purchasing flow broken on mobile Chrome
+PRIORITY: P1 — affects estimated 23% of mobile users
+
+ATTACHMENTS: [screen_recording.mp4] [console_logs.txt]</div>
+
+      <h3>The Title Is Everything</h3>
+      <p>Write your title like a one-sentence newspaper headline. It should tell a developer everything they need to know before opening the ticket: what broke, where, and under what conditions. "Button not working" is useless. "'Add to Cart' button unresponsive on mobile Chrome 120 — iOS 17" is actionable.</p>
+
+      <div class="tip-box">Always include a screen recording when possible. A 15-second video can replace three paragraphs of description and eliminates ambiguity entirely.</div>
+
+      <h3>Severity vs. Priority</h3>
+      <p><strong>Severity</strong> is how bad the bug is technically. A crashing bug is high severity regardless of how often it happens. <strong>Priority</strong> is how urgently it needs to be fixed, which depends on business impact. A typo on the homepage might be low severity but high priority because it affects first impressions for all visitors.</p>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-post4" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <button class="modal-close" onclick="closeModalById('modal-post4')">✕ Close</button>
+      <span class="modal-tag">Lifecycle</span>
+      <h2 class="modal-title">The Bug Lifecycle: From Discovery to "Resolved"</h2>
+    </div>
+    <div class="modal-body">
+      <p>When a QA engineer finds a bug, that's actually the beginning of a process, not the end of one. Understanding the bug lifecycle helps you communicate better with your team and ensures nothing falls through the cracks.</p>
+
+      <h3>The Stages</h3>
+      <p><strong>1. New:</strong> You've logged the bug. It exists in the system but hasn't been reviewed yet.</p>
+      <p><strong>2. Assigned:</strong> A developer or triage team has picked it up and it's been assigned to someone to investigate.</p>
+      <p><strong>3. In Progress / Open:</strong> The developer is actively working on a fix.</p>
+      <p><strong>4. Fixed / Ready for QA:</strong> The developer believes it's resolved and pushes it back to QA for verification.</p>
+      <p><strong>5. Verified:</strong> QA has confirmed the fix works. The bug is closed.</p>
+      <p><strong>6. Reopened:</strong> The fix didn't work, or introduced a new issue. Back to step 2.</p>
+
+      <div class="code-block">Bug Lifecycle State Machine:
+
+  [New] → [Assigned] → [In Progress] → [Fixed/Ready for QA]
+                                                 ↓
+                                           [Verified] ✓
+                                                 ↑
+                                         [Reopened] ↺ ← QA fails the fix</div>
+
+      <div class="tip-box">When you reopen a bug, always add a comment explaining exactly why — include the environment, steps you tested, and what still went wrong. This gives developers a head start on the second fix.</div>
+
+      <h3>Special States</h3>
+      <p><strong>Won't Fix:</strong> The bug is real, but the team has decided it's not worth fixing — often for low-severity cosmetic issues. <strong>Cannot Reproduce:</strong> The developer (or QA) can't replicate the issue. This often means your bug report needs more detail. <strong>Duplicate:</strong> Another ticket already covers this issue.</p>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-post5" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <button class="modal-close" onclick="closeModalById('modal-post5')">✕ Close</button>
+      <span class="modal-tag">Testing Types</span>
+      <h2 class="modal-title">The 8 Types of Software Testing Every Beginner Must Know</h2>
+    </div>
+    <div class="modal-body">
+      <p>Software testing has a vocabulary problem. Teams throw around "smoke testing" and "regression testing" and "UAT" as if everyone knows what they mean. Here's your plain-English decoder ring.</p>
+
+      <h3>1. Unit Testing</h3>
+      <p>Tests a single function or component in isolation. Usually written by developers. Fast, focused, and should be run constantly during development. Think: "does this one function return the right output?"</p>
+
+      <h3>2. Integration Testing</h3>
+      <p>Tests how multiple components work together. Where unit testing checks individual bricks, integration testing checks that the wall holds. Common failure zone: APIs, databases, third-party services.</p>
+
+      <h3>3. End-to-End (E2E) Testing</h3>
+      <p>Tests a complete user workflow from start to finish, simulating real user behavior. Example: "user signs up → verifies email → logs in → purchases product → receives confirmation email." Slowest but most representative of real usage.</p>
+
+      <h3>4. Regression Testing</h3>
+      <p>Re-running existing tests after a code change to ensure nothing that worked before is now broken. The backbone of automated QA suites.</p>
+
+      <h3>5. Smoke Testing</h3>
+      <p>A quick sanity check — just enough testing to confirm the build is stable enough for deeper testing. "Does the app even launch? Can I log in?" Run this before spending hours on detailed testing of a broken build.</p>
+
+      <h3>6. Exploratory Testing</h3>
+      <p>Unscripted, curiosity-driven testing where the tester actively investigates the application. No test cases written in advance. This is where the most interesting bugs hide.</p>
+
+      <div class="tip-box">Exploratory testing is a skill, not a free-for-all. The best exploratory testers have a mental model of the system and systematically probe its assumptions.</div>
+
+      <h3>7. Performance Testing</h3>
+      <p>Tests how the application behaves under load. Load testing checks normal load; stress testing pushes it to the breaking point. Important for anything expected to scale.</p>
+
+      <h3>8. User Acceptance Testing (UAT)</h3>
+      <p>Conducted by end users or stakeholders (not QA engineers) to confirm the software meets their needs before it goes live. The final gate before production.</p>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-post6" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <button class="modal-close" onclick="closeModalById('modal-post6')">✕ Close</button>
+      <span class="modal-tag">Tools</span>
+      <h2 class="modal-title">Best QA Tools for Beginners in 2025: What to Learn and Why</h2>
+    </div>
+    <div class="modal-body">
+      <p>The QA tooling landscape is massive and changes constantly. Don't try to learn everything at once. Here's a focused starter kit that will make you immediately employable.</p>
+
+      <h3>Bug Tracking: JIRA</h3>
+      <p>JIRA is the industry standard for issue and project tracking. Learn to create, search, filter, and update tickets. Understand workflows and sprints. Even if your company uses something else (Linear, GitHub Issues, Trello), JIRA knowledge transfers.</p>
+
+      <h3>API Testing: Postman</h3>
+      <p>Most modern apps communicate via REST APIs. Postman lets you send HTTP requests and inspect responses without writing code. Start by learning GET and POST requests, then move into collections, environments, and basic test scripts.</p>
+
+      <div class="code-block">// Postman test script (JavaScript)
+pm.test("Status code is 200", function () {
+    pm.response.to.have.status(200);
+});
+
+pm.test("Response contains user id", function () {
+    const jsonData = pm.response.json();
+    pm.expect(jsonData).to.have.property('id');
+});</div>
+
+      <h3>Web Automation: Cypress or Selenium</h3>
+      <p><strong>Cypress</strong> is beginner-friendly, modern, and has excellent documentation. Ideal for JavaScript/TypeScript stacks. <strong>Selenium</strong> is older, more established, and supports multiple languages. If you're choosing from scratch in 2025, start with Cypress.</p>
+
+      <h3>Performance Testing: k6 or JMeter</h3>
+      <p>Once you're comfortable with functional testing, learn a performance tool. k6 is modern, developer-friendly, and uses JavaScript. JMeter is GUI-based and more approachable for non-coders.</p>
+
+      <div class="tip-box">Pro tip: Learn your browser's DevTools deeply before picking up any automation tool. The Network tab, Console, and Application Storage inspector will be your most-used testing tools for years.</div>
+
+      <h3>Version Control: Git</h3>
+      <p>Not strictly a "QA tool," but non-negotiable. You need to understand branching, pull requests, and how code changes move through environments. Your test code lives in the same repository as the product code — treat it the same way.</p>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-post7" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <button class="modal-close" onclick="closeModalById('modal-post7')">✕ Close</button>
+      <span class="modal-tag">Career</span>
+      <h2 class="modal-title">How to Land Your First QA Job: The Honest Roadmap</h2>
+    </div>
+    <div class="modal-body">
+      <p>There's a lot of bad career advice in QA. The honest truth: this is a great field to break into tech, but you need to build real, demonstrable skills. Here's what actually works.</p>
+
+      <h3>Phase 1: Build the Foundation (Weeks 1–6)</h3>
+      <p>Learn how web apps work. Understand HTTP, HTML, CSS, and the concept of front-end vs. back-end. You don't need to be a developer, but you need enough technical literacy to communicate with one. Spend time with browser DevTools. Read through API documentation for any public API (GitHub's or Stripe's docs are excellent).</p>
+
+      <h3>Phase 2: Practice Testing Real Apps (Weeks 7–10)</h3>
+      <p>Pick an open-source project or a public app (like a popular e-commerce site or social platform) and practice exploratory testing it. Write real test cases. Log bugs in a personal JIRA board. Document your findings in a clean, organized way.</p>
+
+      <div class="tip-box">Some companies explicitly invite bug reports on their public beta programs. Find one, test it seriously, and report genuine bugs. These can become excellent portfolio pieces.</div>
+
+      <h3>Phase 3: Build a Portfolio (Weeks 11–14)</h3>
+      <p>Create a public GitHub repository with your test automation work. Include a README that explains the project, how to run the tests, and what you were testing. Even a small Cypress test suite for a demo app demonstrates initiative and technical literacy.</p>
+
+      <h3>Phase 4: Apply Strategically</h3>
+      <p>Target companies that take QA seriously — usually mid-stage startups or enterprises with mature engineering teams. Look for job listings that mention test automation, API testing, or CI/CD. Avoid roles that use QA as a junior title for what is essentially manual clicking with no path to automation.</p>
+
+      <div class="code-block">What to include in your QA Portfolio:
+  ✓ Test plan for a real or demo application
+  ✓ 10–20 well-written test cases (manual)
+  ✓ Automated test suite (Cypress or Selenium)
+  ✓ Example bug reports (with screenshots)
+  ✓ API test collection (Postman)
+  ✓ A README explaining your testing approach</div>
+
+      <h3>The Mindset That Gets You Hired</h3>
+      <p>The best junior QA engineers show up curious, humble, and detail-oriented. They ask "what could go wrong?" before a feature ships, not after. They communicate clearly and without blame. They treat testing as a craft, not a checklist. That mindset is evident in interviews — and it's what gets the offer.</p>
+    </div>
+  </div>
+</div>
+
+<div style="border-top: 2px solid var(--ink); margin-top: 2rem;">
+  <div class="bottom-strip">
+    <span>QA Journal — Beginner Series · 2025</span>
+    <span>7 posts · Foundations to Career</span>
+  </div>
+</div>
+
+<script>
+  function openModal(id) {
+    document.getElementById('modal-' + id).classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal(event) {
+    if (event.target === event.currentTarget) {
+      event.currentTarget.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+  }
+
+  function closeModalById(id) {
+    document.getElementById(id).classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  document.querySelectorAll('.read-more').forEach((link, i) => {
+    link.addEventListener('click', (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+      openModal('post' + (i + 1));
+    });
+  });
+</script>
+
+</body>
+</html>
